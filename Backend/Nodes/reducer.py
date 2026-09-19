@@ -2,16 +2,11 @@ from pathlib import Path
 
 from Backend.State.state import State
 
-def Reducer(state: State) -> dict:
-    
-    title = state["plan"].blog_title
-    body = "\n\n".join(state["sections"]).strip()
-
-    final_md = f"# {title}\n\n{body}\n"
-
-    # ---- save to file ----
-    filename = title.lower().replace(" ", "_") + ".md"
-    output_path = Path(filename)
-    output_path.write_text(final_md, encoding="utf-8")
-
-    return {"final": final_md}
+def merge_content(state: State) -> dict:
+    plan = state["plan"]
+    if plan is None:
+        raise ValueError("merge_content called without plan.")
+    ordered_sections = [md for _, md in sorted(state["sections"], key=lambda x: x[0])]
+    body = "\n\n".join(ordered_sections).strip()
+    merged_md = f"# {plan.blog_title}\n\n{body}\n"
+    return {"merged_md": merged_md}
