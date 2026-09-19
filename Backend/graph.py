@@ -42,7 +42,6 @@ g.add_edge("reducer", END)
 app = g.compile()
 
 
-as_of = date.today().isoformat()
 def run(topic: str, as_of: Optional[str] = None):
     if as_of is None:
         as_of = date.today().isoformat()
@@ -67,4 +66,6 @@ def run(topic: str, as_of: Optional[str] = None):
 
     return out
 
-print(run("Self Attention in Transformer Architecture"))
+
+if __name__ == "__main__":
+    print(run("Self Attention in Transformer Architecture"))
