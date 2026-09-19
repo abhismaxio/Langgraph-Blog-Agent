@@ -1,3 +1,6 @@
+from datetime import date
+from typing import Optional
+
 from langgraph.graph import START, END, StateGraph
 
 from Backend.Nodes.fanout import fanout
@@ -38,21 +41,30 @@ g.add_edge("reducer", END)
 
 app = g.compile()
 
-if __name__ == "__main__":
-	initial_state = {
-		"topic": "Write a blog on Self Attention",
-		"mode": "",
-		"needs_research": False,
-		"queries": [],
-		"evidence": [],
-		"plan": None,
-		"as_of": "2026-09-20",
-		"recency_days": "",
-		"sections": [],
-		"merged_md": "",
-		"md_with_placeholders": "",
-		"image_specs": [],
-		"final": "",
-	}
-	output = app.invoke(initial_state)
-	print(output["final"])
+
+as_of = date.today().isoformat()
+def run(topic: str, as_of: Optional[str] = None):
+    if as_of is None:
+        as_of = date.today().isoformat()
+
+    out = app.invoke(
+        {
+            "topic": topic,
+            "mode": "",
+            "needs_research": False,
+            "queries": [],
+            "evidence": [],
+            "plan": None,
+            "as_of": as_of,
+            "recency_days": 7,
+            "sections": [],
+            "merged_md": "",
+            "md_with_placeholders": "",
+            "image_specs": [],
+            "final": "",
+        }
+    )
+
+    return out
+
+print(run("Self Attention in Transformer Architecture"))
